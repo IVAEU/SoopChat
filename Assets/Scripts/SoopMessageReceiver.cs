@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.WebSockets;
-using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -199,7 +198,7 @@ public class SoopMessageReceiver : MonoBehaviour
                             receiveResult[^1].Add(buffer.Array[i]);
                         }
                     }
-                    
+
                     string chatText = Encoding.UTF8.GetString(receiveResult[1].ToArray(), 0, receiveResult[1].Count);
                     string idText = Encoding.UTF8.GetString(receiveResult[2].ToArray(), 0, receiveResult[2].Count);
                     string nicknameText = Encoding.UTF8.GetString(receiveResult[6].ToArray(), 0, receiveResult[6].Count);
@@ -207,7 +206,15 @@ public class SoopMessageReceiver : MonoBehaviour
                     if (chatText != "-1" && chatText != "1" && !chatText.Contains("|"))
                     {
                         OnMessageReceive?.Invoke(new [] {idText, nicknameText, chatText});
-                        Debug.Log($"Received: \"{idText}\" [{nicknameText}]: {chatText}"); 
+
+                        StringBuilder sb = new StringBuilder();
+                        for (int i = 0; i < receiveResult.Count; ++i)
+                        {
+                            sb.Append(Encoding.UTF8.GetString(receiveResult[i].ToArray(), 0, receiveResult[i].Count));
+                            sb.Append("|");
+                        }
+                        
+                        Debug.Log($"Received: {sb}"); 
                     }
                 }
             }
