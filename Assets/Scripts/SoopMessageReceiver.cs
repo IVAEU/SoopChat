@@ -54,8 +54,6 @@ public class SoopMessageReceiver : MonoBehaviour
     private ClientWebSocket _ws;
 
     public string userID = "";
-    public string loginID = "";
-    public string loginPWD = "";
 
     public Action<string[]> OnMessageReceive;
     
@@ -108,8 +106,6 @@ public class SoopMessageReceiver : MonoBehaviour
     private async Task LoginSoop()
     {
         WWWForm form = new WWWForm();
-        form.AddField("szUid",$"{loginID}");
-        form.AddField("szPassword",$"{loginPWD}");
         form.AddField("szWork",$"login");
         UnityWebRequest webRequest = UnityWebRequest.Post($"https://login.sooplive.co.kr/app/LoginAction.php", form);
         webRequest.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36");
@@ -225,11 +221,18 @@ public class SoopMessageReceiver : MonoBehaviour
         }
     }
 
-    public async Task<string> GetUsernickName()
+    public async Task<string> GetUserNickName()
     {
         string stationData = await GetStation(userID);
         StationResponse stationJson = JsonUtility.FromJson<StationResponse>(stationData);
         return stationJson.station.user_nick;
+    }
+    
+    public async Task<string> GetUserBroadcastName()
+    {
+        string stationData = await GetStation(userID);
+        StationResponse stationJson = JsonUtility.FromJson<StationResponse>(stationData);
+        return stationJson.broad.broad_title;
     }
     
     private string EncodeBase64(Byte[] plainBytes)

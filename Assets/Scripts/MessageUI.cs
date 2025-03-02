@@ -20,7 +20,6 @@ public class MessageUI : MonoBehaviour
         
         _chatText = new TextMeshProUGUI[chatContainer.childCount];
         for (int i = 0; i < chatContainer.childCount; i++)
-            
         {
             _chatText[i] = chatContainer.GetChild(i).GetComponent<TextMeshProUGUI>();
         }
@@ -29,7 +28,9 @@ public class MessageUI : MonoBehaviour
 
     private async void SetNickname()
     {
-        nicknameText.text = await messageReceiver.GetUsernickName();
+        string nickname = await messageReceiver.GetUserNickName();
+        string broadcastName = await messageReceiver.GetUserBroadcastName();
+        nicknameText.text = $"{nickname}: {broadcastName}";
     }
 
     private void AddMessage(string[] str)
